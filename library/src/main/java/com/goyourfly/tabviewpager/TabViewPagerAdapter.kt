@@ -1,6 +1,5 @@
 package com.goyourfly.tabviewpager
 
-import android.graphics.Color
 import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -8,12 +7,12 @@ import android.view.ViewGroup
 
 /**
  * Created by gaoyufei on 2017/10/18.
+ * ViewPager的Adapter，主要负责初始化RecyclerView
  */
 
-class TabViewPagerAdapter(val tabs: ArrayList<String>,
+class TabViewPagerAdapter(val tabs: Array<String>,
                           val tabViewPager: TabViewPager,
-                          val adapterProvider: AdapterProvider,
-                          val layoutManagerProvider: LayoutManagerProvider) : PagerAdapter() {
+                          val bindAdapter: (recycler:RecyclerView,position:Int) -> Unit) : PagerAdapter() {
     val map = mutableMapOf<Int, RecyclerView>()
     override fun isViewFromObject(view: View?, any: Any?): Boolean {
         return view == any
@@ -32,9 +31,9 @@ class TabViewPagerAdapter(val tabs: ArrayList<String>,
         container.addView(recyclerView)
         recyclerView.addOnScrollListener(tabViewPager.scrollListener)
         recyclerView.clipToPadding = false
-        recyclerView.layoutManager = layoutManagerProvider.onGetLayoutManager(position)
-        recyclerView.adapter = adapterProvider.onGetAdapter(position)
         recyclerView.setPadding(0,tabViewPager.getHeaderHeight(),0,0)
+        bindAdapter(recyclerView,position)
+
         tabViewPager.scrollTo(recyclerView,tabViewPager.headerTranslateY)
         map.put(position, recyclerView)
         return recyclerView

@@ -16,11 +16,15 @@ import android.widget.LinearLayout
 
 /**
  * Created by gaoyufei on 2017/10/18.
+ * 简单的接口实现ViewHeader，ViewPager，TabLayout和RecyclerView
+ * 配合使用时，滑动时，TabLayout驻留在屏幕顶部的功能
  */
 
 class TabViewPager : FrameLayout {
     // 作为Header的容器
     val headBox = LinearLayout(context)
+    // HeaderView
+    var headerView:View? = null
     // TabLayout
     val tabLayout = TabLayout(context)
     // ViewPager
@@ -34,6 +38,9 @@ class TabViewPager : FrameLayout {
     // 存储每个RecyclerView对应的滑动距离
     val headerTranslateMap = mutableMapOf<RecyclerView, Int>()
 
+    // Header滑动是否Parallax
+    var parallax = false
+
     val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -46,8 +53,8 @@ class TabViewPager : FrameLayout {
             headerTranslateMap.put(recyclerView, translateY)
 
             // 获取最大滑动距离
-            val headerMaxHeight = headBox.getChildAt(0).measuredHeight
-            Log.d("TabViewPager", "HeaderMax:$headerMaxHeight,$translateY")
+            val headerMaxHeight = if(headerView == null) 0 else headerView!!.measuredHeight
+
             if (translateY < 0)
                 return
             if (translateY > headerMaxHeight && dy < 0)
@@ -61,6 +68,9 @@ class TabViewPager : FrameLayout {
             }
 
             headBox.translationY = (-headerTranslateY).toFloat()
+            if (parallax) {
+                headerView?.translationY = (headerTranslateY / 2).toFloat()
+            }
             viewPagerAdapter.map.values
                     .filter { it != recyclerView }
                     .forEach { recycler ->
@@ -70,9 +80,6 @@ class TabViewPager : FrameLayout {
 
                         if (scrollY >= headerTranslateY)
                             return
-                        scrollY = headerTranslateY
-                        headerTranslateMap.put(recycler, scrollY)
-
                         scrollTo(recycler, headerTranslateY)
                     }
         }
@@ -89,14 +96,15 @@ class TabViewPager : FrameLayout {
         tabLayout.setBackgroundColor(Color.WHITE)
     }
 
-    fun getHeaderHeight(): Int {
+    internal fun getHeaderHeight(): Int {
         if (mHeaderHeight <= 0) {
             mHeaderHeight = headBox.measuredHeight
         }
         return mHeaderHeight
     }
 
-    fun scrollTo(recycler: RecyclerView, headerTranslateY: Int) {
+    internal fun scrollTo(recycler: RecyclerView, headerTranslateY: Int) {
+        headerTranslateMap.put(recycler, headerTranslateY)
         val needMoveOffset = -headerTranslateY
 
         if (recycler.layoutManager is LinearLayoutManager) {
@@ -106,23 +114,26 @@ class TabViewPager : FrameLayout {
         }
     }
 
-    fun setup(tabs: ArrayList<String>,
-              subHeaderView: View,
-              adapterProvider: AdapterProvider,
-              layoutManagerProvider: LayoutManagerProvider) {
+    fun setup(tabs: Array<String>,
+              subHeaderView: View?,
+              parallax: Boolean = false,
+              bindAdapter: (recycler: RecyclerView, position: Int) -> Unit) {
+        this.parallax = parallax
         headBox.removeAllViews()
-        headBox.addView(subHeaderView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        headerView = subHeaderView
+        if (subHeaderView != null)
+            headBox.addView(subHeaderView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         headBox.addView(tabLayout, LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         // 初始化ViewPager
-        viewPagerAdapter = TabViewPagerAdapter(tabs, this, adapterProvider, layoutManagerProvider)
+        viewPagerAdapter = TabViewPagerAdapter(tabs, this, bindAdapter)
         viewPager.adapter = viewPagerAdapter
         // 初始化ViewPager
         tabLayout.setupWithViewPager(viewPager)
         headBox.post {
             viewPagerAdapter.map.values.forEach {
                 it.setPadding(0, getHeaderHeight(), 0, 0)
-                scrollTo(it,headerTranslateY)
+                scrollTo(it, headerTranslateY)
             }
         }
     }
@@ -131,4 +142,16 @@ class TabViewPager : FrameLayout {
      * 获取对应位置的RecyclerView
      */
     fun getRecyclerView(position: Int) = viewPagerAdapter.getRecyclerView(position)
+
+    /**
+     * 获取RecyclerView的Adapter
+     */
+    fun getAdapter(position: Int) = getRecyclerView(position)?.adapter
+
+    /**
+     * 添加ViewPager的滑动事件
+     */
+    fun addOnPageChangeListener(listener: ViewPager.OnPageChangeListener) {
+        viewPager.addOnPageChangeListener(listener)
+    }
 }

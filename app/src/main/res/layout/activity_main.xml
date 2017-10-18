@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.goyourfly.tabviewpager.demo.MainActivity">
+    tools:context="com.goyourfly.tabviewpager.demo.MainActivityJava">
 
     <com.goyourfly.tabviewpager.TabViewPager
         android:id="@+id/tabViewPager"
