@@ -1,6 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-
+ext {
+    PUBLISH_GROUP_ID = 'com.goyourfly'
+    PUBLISH_ARTIFACT_ID = 'tabviewpager'
+    PUBLISH_VERSION = '0.5'
+}
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -40,3 +44,5 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
