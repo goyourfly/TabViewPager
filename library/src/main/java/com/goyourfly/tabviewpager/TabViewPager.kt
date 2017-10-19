@@ -24,7 +24,7 @@ class TabViewPager : FrameLayout {
     // 作为Header的容器
     val headBox = LinearLayout(context)
     // HeaderView
-    var headerView:View? = null
+    var headerView: View? = null
     // TabLayout
     val tabLayout = TabLayout(context)
     // ViewPager
@@ -35,8 +35,7 @@ class TabViewPager : FrameLayout {
     var mHeaderHeight = -1
 
     var headerTranslateY = 0
-    // 存储每个RecyclerView对应的滑动距离
-    val headerTranslateMap = mutableMapOf<RecyclerView, Int>()
+
 
     // Header滑动是否Parallax
     var parallax = false
@@ -46,15 +45,16 @@ class TabViewPager : FrameLayout {
             super.onScrolled(recyclerView, dx, dy)
 
             // 记录当前RecyclerView滑动位置
-            var translateY = headerTranslateMap[recyclerView]
+            var translateY = viewPagerAdapter.headerTranslateMap[recyclerView]
             if (translateY == null)
-                translateY = 0
+                return
             translateY += dy
-            headerTranslateMap.put(recyclerView, translateY)
+            viewPagerAdapter.headerTranslateMap.put(recyclerView, translateY)
 
             // 获取最大滑动距离
-            val headerMaxHeight = if(headerView == null) 0 else headerView!!.measuredHeight
+            val headerMaxHeight = if (headerView == null) 0 else headerView!!.measuredHeight
 
+            // 边界检测
             if (translateY < 0)
                 return
             if (translateY > headerMaxHeight && dy < 0)
@@ -67,14 +67,16 @@ class TabViewPager : FrameLayout {
                 headerTranslateY = headerMaxHeight
             }
 
+            // 移动Header
             headBox.translationY = (-headerTranslateY).toFloat()
             if (parallax) {
                 headerView?.translationY = (headerTranslateY / 2).toFloat()
             }
+            // 更新其他RecyclerView滑动距离
             viewPagerAdapter.map.values
                     .filter { it != recyclerView }
                     .forEach { recycler ->
-                        var scrollY = headerTranslateMap[recycler]
+                        var scrollY = viewPagerAdapter.headerTranslateMap[recycler]
                         if (scrollY == null)
                             scrollY = 0
 
@@ -104,7 +106,7 @@ class TabViewPager : FrameLayout {
     }
 
     internal fun scrollTo(recycler: RecyclerView, headerTranslateY: Int) {
-        headerTranslateMap.put(recycler, headerTranslateY)
+        viewPagerAdapter.headerTranslateMap.put(recycler, headerTranslateY)
         val needMoveOffset = -headerTranslateY
 
         if (recycler.layoutManager is LinearLayoutManager) {

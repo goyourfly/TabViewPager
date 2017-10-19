@@ -15,14 +15,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val header = View.inflate(this,R.layout.layout_header,null)
+        val header = View.inflate(this, R.layout.layout_header, null)
         tabViewPager.setup(
                 arrayOf("A", "B", "C", "D", "E", "F", "G"),
                 header,
-                true, { recycler, position ->
-            recycler.layoutManager = LinearLayoutManager(this)
-            recycler.adapter = MyAdapter()
-        })
+                true,
+                { recycler, position ->
+                    recycler.layoutManager = LinearLayoutManager(this)
+                    recycler.adapter = MyAdapter()
+                })
     }
 
     class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
