@@ -1,5 +1,9 @@
 # TabViewPager
-[ ![Download](https://api.bintray.com/packages/goyourfly/maven/TabViewPager/images/download.svg) ](https://bintray.com/goyourfly/maven/TabViewPager/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/goyourfly/maven/TabViewPager/images/download.svg) ](https://bintray.com/goyourfly/maven/TabViewPager/_latestVersion) <a href="http://www.methodscount.com/?lib=com.goyourfly%3Atabviewpager%3A%2B"><img src="https://img.shields.io/badge/Methods and size-core: 96 | 30 KB-e91e63.svg"/></a>
+
+
+
+
 
 TabViewPager，通过简单的接口实现ViewPager，Head，TabLayout，RecyclerView组合展示
 
