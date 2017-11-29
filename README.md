@@ -35,8 +35,7 @@ compile 'com.goyourfly:tabviewpager:latestVersion'
 ````java
 // Load a header layout
 val header = View.inflate(this, R.layout.layout_header, null)
-// Call TabViewPager.measureStep1(...) function to init
-val header = View.inflate(this, R.layout.layout_header, null)
+// Use TabViewPager.Builder() to init
 TabViewPager.Builder()
         .with(tabViewPager)
         .tabs(arrayOf("A", "B", "C", "D", "E", "F", "G"))// tab array
