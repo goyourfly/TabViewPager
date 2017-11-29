@@ -35,14 +35,17 @@ compile 'com.goyourfly:tabviewpager:latestVersion'
 ````java
 // Load a header layout
 val header = View.inflate(this, R.layout.layout_header, null)
-// Call TabViewPager.setup(...) function to init
-tabViewPager.setup(
-        arrayOf("A", "B", "C", "D", "E", "F", "G"),// tab array
-        header,// header view
-        true,// if use parallax
-        // bind RecyclerView.adapter and LayoutManager
-        { recycler, position ->
-            recycler.layoutManager = LinearLayoutManager(this)
-            recycler.adapter = MyAdapter()
-        })
+// Call TabViewPager.measureStep1(...) function to init
+val header = View.inflate(this, R.layout.layout_header, null)
+TabViewPager.Builder()
+        .with(tabViewPager)
+        .tabs(arrayOf("A", "B", "C", "D", "E", "F", "G"))// tab array
+        .header(header)// header view
+        .parallax(false)// if use parallax
+        .layoutManager {
+            LinearLayoutManager(this)// layout manager
+        }
+        .adapterProvider {
+            MyAdapter()// recyclerView adapter
+        }.build() // final step, build
 ````

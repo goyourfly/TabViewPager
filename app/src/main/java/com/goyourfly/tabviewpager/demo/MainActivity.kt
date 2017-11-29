@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.goyourfly.tabviewpager.TabViewPager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,14 +17,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val header = View.inflate(this, R.layout.layout_header, null)
-        tabViewPager.setup(
-                arrayOf("A", "B", "C", "D", "E", "F", "G"),
-                header,
-                true,
-                { recycler, position ->
-                    recycler.layoutManager = LinearLayoutManager(this)
-                    recycler.adapter = MyAdapter()
-                })
+        TabViewPager.Builder()
+                .with(tabViewPager)
+                .tabs(arrayOf("A", "B", "C", "D", "E", "F", "G"))
+                .header(header)
+                .parallax(false)
+                .layoutManager {
+                    LinearLayoutManager(this)
+                }
+                .adapterProvider {
+                    MyAdapter()
+                }.build()
     }
 
     class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
