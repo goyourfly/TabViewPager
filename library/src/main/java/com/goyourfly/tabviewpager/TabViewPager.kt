@@ -211,9 +211,20 @@ class TabViewPager : FrameLayout {
     var downX = 0F
     var downY = 0F
 
+    var isViewPagerAnimating = false
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (!builder.dispatchTouch)
             return super.dispatchTouchEvent(ev)
+
+        if (isViewPagerAnimating || IsViewPagerAnimating.isAnimating(viewPager)) {
+            isViewPagerAnimating = true
+            if (ev.action == MotionEvent.ACTION_UP
+                    || ev.action == MotionEvent.ACTION_CANCEL) {
+                isViewPagerAnimating = false
+            }
+            return super.dispatchTouchEvent(ev)
+        }
 
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {

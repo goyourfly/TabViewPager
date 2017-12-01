@@ -50,7 +50,6 @@ abstract class BaseTabViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getRecyclerView()?.addOnScrollListener(onScrollListener)
-        getRecyclerView()?.setHasFixedSize(true)
         getRecyclerView()?.addItemDecoration(TabViewPagerItemDecoration(tabViewPager.getHeaderHeight()))
         getRecyclerView()?.addItemDecoration(object : RecyclerView.ItemDecoration() {
             var first = true
@@ -61,9 +60,9 @@ abstract class BaseTabViewPagerFragment : Fragment() {
                 // Handler.postDelay(...)强
                 if (first) {
                     first = false
-                    parent.post {
+                    parent.postDelayed( {
                         scrollTo(0, tabViewPager.headerTranslateY)
-                    }
+                    },100)
                     parent.clipToPadding = false
                     val paddingBottom = getPaddingBottom(parent, state)
                     parent.setPadding(parent.paddingLeft, parent.paddingTop, parent.paddingRight, paddingBottom)
