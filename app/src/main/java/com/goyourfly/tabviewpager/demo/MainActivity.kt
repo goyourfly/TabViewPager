@@ -17,32 +17,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val header = View.inflate(this, R.layout.layout_header, null)
-        TabViewPager.Builder()
+        TabViewPager.Builder
                 .with(tabViewPager)
-                .tabs(arrayOf("A", "B", "C", "D", "E", "F", "G"))
                 .header(header)
-                .parallax(false)
-                .layoutManager {
-                    LinearLayoutManager(this)
-                }
-                .adapterProvider {
-                    MyAdapter()
-                }.build()
-    }
-
-    class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-            // bind data
-        }
-
-        override fun getItemCount(): Int {
-            return 100
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_content, parent, false))
-        }
-
-        class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
+                .parallax(true)
+                .adapter(DefaultViewPagerAdapter(supportFragmentManager))
+                .build()
     }
 }

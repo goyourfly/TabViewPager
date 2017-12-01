@@ -12,4 +12,5 @@
         android:scaleType="centerCrop"
         android:src="@drawable/header_img" />
 
+
 </LinearLayout>

@@ -10,12 +10,10 @@ import android.view.View
  */
 
 class TabViewPagerItemDecoration(val headerHeight:Int): RecyclerView.ItemDecoration() {
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildLayoutPosition(view)
         if(position == 0){
             outRect.top = headerHeight
-        }else{
-            super.getItemOffsets(outRect, view, parent, state)
         }
     }
 }
