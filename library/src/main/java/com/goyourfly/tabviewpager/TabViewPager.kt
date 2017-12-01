@@ -56,6 +56,7 @@ class TabViewPager : FrameLayout {
             }
         }
     }
+
     fun doScroll(position: Int, dx: Int, dy: Int) {
         if (adapter == null)
             return
@@ -88,7 +89,7 @@ class TabViewPager : FrameLayout {
 
     fun doAfterScroll(position: Int) {
         adapter?.getUnVisibleFragment(position)?.forEach {
-            if (it.scrollY!= headerTranslateY) {
+            if (it.scrollY > headerTranslateY) {
                 it.scrollTo(0, headerTranslateY)
             }
         }
@@ -178,17 +179,17 @@ class TabViewPager : FrameLayout {
 
     abstract class BaseTabViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         private val fragmentMap = mutableMapOf<Int, BaseTabViewPagerFragment>()
-        private var tabViewPager:TabViewPager? = null
+        private var tabViewPager: TabViewPager? = null
 
         abstract override fun getItem(position: Int): BaseTabViewPagerFragment
 
-        internal fun setTabViewPager(tabViewPager: TabViewPager){
+        internal fun setTabViewPager(tabViewPager: TabViewPager) {
             this.tabViewPager = tabViewPager
         }
 
         override fun instantiateItem(container: ViewGroup?, position: Int): Any {
             val fragment = super.instantiateItem(container, position) as BaseTabViewPagerFragment
-            fragment.setup(position,tabViewPager!!,tabViewPager!!.onScrollListener)
+            fragment.setup(position, tabViewPager!!, tabViewPager!!.onScrollListener)
             fragmentMap.put(position, fragment)
             return fragment
         }
@@ -211,7 +212,7 @@ class TabViewPager : FrameLayout {
     var downY = 0F
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if(!builder.dispatchTouch)
+        if (!builder.dispatchTouch)
             return super.dispatchTouchEvent(ev)
 
         when (ev.action) {
@@ -250,7 +251,7 @@ class TabViewPager : FrameLayout {
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        if(!builder.dispatchTouch)
+        if (!builder.dispatchTouch)
             return super.onInterceptTouchEvent(ev)
         return scrollVertical
     }
@@ -272,7 +273,7 @@ class TabViewPager : FrameLayout {
             return this
         }
 
-        fun dispatchTouch(dispatchTouch:Boolean):Builder{
+        fun dispatchTouch(dispatchTouch: Boolean): Builder {
             this.dispatchTouch = dispatchTouch
             return this
         }

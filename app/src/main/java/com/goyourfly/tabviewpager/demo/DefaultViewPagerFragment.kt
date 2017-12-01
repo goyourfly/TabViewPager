@@ -28,9 +28,9 @@ internal class DefaultViewPagerFragment() : BaseTabViewPagerFragment() {
         super.onViewCreated(view, savedInstanceState)
         getRecyclerView()?.layoutManager = LinearLayoutManager(context)
         val adapter = DefaultAdapter()
-//        adapter.addData(arrayListOf("1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"))
+        adapter.addData(arrayListOf("1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"))
 //        adapter.addData(arrayListOf("1", "1", "1"))
-        adapter.addData(arrayListOf("1", "1", "1", "1"))
+//        adapter.addData(arrayListOf("1", "1", "1", "1"))
         getRecyclerView()?.adapter = adapter
 
 
