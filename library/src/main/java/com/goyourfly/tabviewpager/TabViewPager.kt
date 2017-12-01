@@ -211,6 +211,9 @@ class TabViewPager : FrameLayout {
     var downY = 0F
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(!builder.dispatchTouch)
+            return super.dispatchTouchEvent(ev)
+
         when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
                 downX = ev.x
@@ -247,6 +250,8 @@ class TabViewPager : FrameLayout {
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        if(!builder.dispatchTouch)
+            return super.onInterceptTouchEvent(ev)
         return scrollVertical
     }
 

@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
                 .with(tabViewPager)
                 .header(header)
                 .parallax(true)
+                .dispatchTouch(true)
                 .adapter(DefaultViewPagerAdapter(supportFragmentManager))
                 .build()
     }
