@@ -50,7 +50,6 @@ abstract class BaseTabViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getRecyclerView()?.addOnScrollListener(onScrollListener)
-        getRecyclerView()?.addItemDecoration(TabViewPagerItemDecoration(tabViewPager.getHeaderHeight()))
         getRecyclerView()?.addItemDecoration(object : RecyclerView.ItemDecoration() {
             var first = true
             override fun onDraw(c: Canvas?, parent: RecyclerView, state: RecyclerView.State) {
@@ -60,12 +59,19 @@ abstract class BaseTabViewPagerFragment : Fragment() {
                 // Handler.postDelay(...)强
                 if (first) {
                     first = false
-                    parent.postDelayed( {
-                        scrollTo(0, tabViewPager.headerTranslateY)
-                    },100)
                     parent.clipToPadding = false
                     val paddingBottom = getPaddingBottom(parent, state)
                     parent.setPadding(parent.paddingLeft, parent.paddingTop, parent.paddingRight, paddingBottom)
+                    parent.post {
+                        scrollTo(0, tabViewPager.headerTranslateY)
+                    }
+                }
+            }
+
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                val position = parent.getChildLayoutPosition(view)
+                if (position == 0) {
+                    outRect.top = tabViewPager.getHeaderHeight()
                 }
             }
 
@@ -79,7 +85,7 @@ abstract class BaseTabViewPagerFragment : Fragment() {
                 var onlyOneType = true
                 var lastType: Int = Int.MAX_VALUE
                 // 超过50个，就不往下走了，大概就是一种类型了
-                for (i in 0..Math.min(50,state.itemCount - 1)){
+                for (i in 0..Math.min(20, state.itemCount - 1)) {
                     if (lastType == Int.MAX_VALUE) {
                         lastType = parent.adapter.getItemViewType(i)
                         continue

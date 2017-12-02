@@ -5,7 +5,7 @@
 
 
 
-TabViewPager，通过简单的接口实现ViewPager，Head，TabLayout，RecyclerView组合展示
+TabViewPager，通过简单的接口实现ViewPager，Head，TabLayout组合展示
 
 ### Demo
 <img src="img/display.gif"/>
@@ -20,7 +20,7 @@ compile 'com.goyourfly:tabviewpager:latestVersion'
 
 ### Usage
 
-* xml
+##### xml
 
 ````xml
 <com.goyourfly.tabviewpager.TabViewPager
@@ -29,22 +29,59 @@ compile 'com.goyourfly:tabviewpager:latestVersion'
         android:layout_height="match_parent" />
 ````
 
-* code
+##### code
 
+* 1.定义Fragment
 
 ````java
-// Load a header layout
+/** 
+ * 自定义一个Fragment 继承自 BaseTabViewPagerFragment
+ * 你可以在这个Fragment中加载数据
+ */
+class MyFragment() : BaseTabViewPagerFragment() {
+	// 重写这个唯一的抽象方法，返回RecyclerView
+    override fun getRecyclerView(): RecyclerView? {
+        return recyclerView
+    }
+    ...
+}
+
+````
+
+* 2.定义ViewPager的Adapter
+
+````java
+// 自定义ViewPagerAdapter必须继承BaseTabViewPagerAdapter
+class MyViewPagerAdapter(fm: FragmentManager)
+    : TabViewPager.BaseTabViewPagerAdapter(fm) {
+    // 要显示的Tab
+    val tabs = arrayOf("Tab1", "Tab2", "Tab3", "Tab4")
+    override fun getItem(position: Int): BaseTabViewPagerFragment {
+    	// 返回上面定义的Fragment
+        return MyFragment()
+    }
+
+    override fun getCount(): Int {
+        return tabs.size
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        return tabs[position]
+    }
+}
+````
+
+* 3.最后一步，初始化TabViewPager
+
+````java
+// 加载头布局
 val header = View.inflate(this, R.layout.layout_header, null)
-// Use TabViewPager.Builder() to init
-TabViewPager.Builder()
+// 初始化TabViewPager
+TabViewPager.Builder
         .with(tabViewPager)
-        .tabs(arrayOf("A", "B", "C", "D", "E", "F", "G"))// tab array
-        .header(header)// header view
-        .parallax(false)// if use parallax
-        .layoutManager {
-            LinearLayoutManager(this)// layout manager
-        }
-        .adapterProvider {
-            MyAdapter()// recyclerView adapter
-        }.build() // final step, build
+        .header(header)
+        .parallax(true)
+        .dispatchTouch(true) // 一般不需要打开，如果Header中有横向滑动的View，可以打开
+        .adapter(MyViewPagerAdapter(FragmentManager))// 绑定Adapter
+        .build()
 ````
