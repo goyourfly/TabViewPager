@@ -81,7 +81,7 @@ TabViewPager.Builder
         .with(tabViewPager)
         .header(header)
         .parallax(true)
-        .dispatchTouch(true) // 一般不需要打开，如果Header中有横向滑动的View，可以打开
+        .dispatchTouch(true) // 一般不需要打开，如果Header中有横向滑动的View并且有事件冲突时打开
         .adapter(MyViewPagerAdapter(FragmentManager))// 绑定Adapter
         .build()
 ````
